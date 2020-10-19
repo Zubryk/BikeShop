@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block main %}
+<main role="main">
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% for item in items %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <svg class="bd-placeholder-img card-img-top" width="100%" height="200"
+                            xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
+                            role="img" aria-label="Placeholder: Thumbnail">
+                            <image href="{{ url_for('static', filename=item.photo) }}" width = 100% alt="ph" />
+                        </svg>
+                        <div class="card-body">
+                            <h5 class="card-title">{{item.title}}</h5>
+                            <p class="card-text" style="margin: 0px;">{{ item.description[:150] }}<span id="dots">...</span><span
+                                   class = 'more' id="more{{item.id}}" style="display: none;">{{ item.description[150:] }}</span></p>
+                                    <div style="text-align: right;">
+                            <button class="btn-sm" style="color: #000; border: none; background:none;" href = "/./{{item.id}}" 
+                                id="myBtn{{item.id}}">Read more</button>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary"><a style="text-decoration: none; color: #000;" href = "/bikes/{{item.id}}">View</a></button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                </div>
+                                <small class="text-muted">Price: {{item.price}}₴</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

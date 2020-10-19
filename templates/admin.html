@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+    <form method="POST"  enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="inputFile">Upload photo</label>
+            <input type="file" name="inputFile">
+            <input type="text" class="form-control" name="title"  placeholder="title">
+            <textarea type="text" class="form-control" name="description" rows="10" placeholder="description"></textarea>
+            <input type="text" class="form-control" name="wheels"  placeholder="wheels size">
+            <input type="number" class="form-control" name="size"  placeholder="bike size">
+            <input type="number" class="form-control" name="price"  placeholder="price">
+            
+        </div>
+        <button type="submit" class="btn btn-dark">Submit</button>
+    </form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Photo</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for bike in bikes %}
+      <tr>
+        <th scope="row">{{bike.id}}</th>
+        <td><img class="zoom" src="{{ url_for('static', filename=bike.photo) }}" width=100 alt="ph" /></td>
+        <td>{{bike.title}}</td>
+        <td>{{bike.price}}₴</td>
+        <td><a class="btn btn-warning" style="text-decoration: none; color: #000;"
+            href="/edit_bike/{{bike.id}}">Edit</a></td>
+        <td><a class="btn btn-danger" style="text-decoration: none; color: #000;"
+            href="/delete_bike/{{bike.id}}">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
