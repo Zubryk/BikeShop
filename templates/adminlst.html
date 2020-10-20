@@ -2,6 +2,7 @@
 
 {% block main %}
 <div class="container">
+  <a class="btn btn-primary" href="/admin_add_bike" style="margin: 10px;">Add new bike</a>
   <table class="table">
     <thead>
       <tr>
@@ -22,6 +23,31 @@
             href="/edit_bike/{{bike.id}}">Edit</a></td>
         <td><a class="btn btn-danger" style="text-decoration: none; color: #000;"
             href="/delete_bike/{{bike.id}}">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a class="btn btn-primary" href="/admin_add_item" style="margin: 10px;">Add new item</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Photo</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td><img class="zoom" src="{{ url_for('static', filename=item.photo) }}" width=100 alt="ph" /></td>
+        <td>{{item.title}}</td>
+        <td>{{item.price}}₴</td>
+        <td><a class="btn btn-warning" style="text-decoration: none; color: #000;"
+            href="/edit_item/{{item.id}}">Edit</a></td>
+        <td><a class="btn btn-danger" style="text-decoration: none; color: #000;"
+            href="/delete_item/{{item.id}}">Delete</a></td>
       </tr>
       {% endfor %}
     </tbody>

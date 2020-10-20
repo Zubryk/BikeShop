@@ -1,5 +1,40 @@
 {% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename = 'style.css')}}">
+{% endblock %}
+
 
 {% block main %}
-<img src="{{ url_for('static', filename=bike.photo) }}" width = 200 alt="ph" />
+<div class="container" >
+
+    <div class="card" >
+        <div id="shopping">
+            <i class="fas fa-cart-plus"><sup id="items-added"></sup></i>
+        </div>
+        <div class="images">
+            <h2>{{bike.title}}</h2>
+            <img style = "width: 70%;" id="big-image" src="{{ url_for('static', filename=bike.photo) }}" alt="">
+        </div>
+        <div class="infos">
+            <div class="price">
+                <h3>Price: {{bike.price}}₴</h3>
+            </div>
+            <div id="more-infos">
+                <h5 class="choose">Description</h5>
+                <h5 class="choose">Basic Info</h5>
+            </div>
+            <div id="info-content">
+                <p class="paragraph" style="display: block;">{{bike.description}}</p>
+                <p class="paragraph" style="display: none;">Wheels diameter.........{{bike.wheels}}<br>Ram size..........................{{bike.size}}</p>
+            </div>
+        
+        </div>
+            <div class="buttons">
+                <button id="add-to-cart" ><i class="fas fa-shopping-cart"></i><a href="/bike_cart/{{bike.id}}" style="text-decoration: none; color: black;">ADD TO CART</a></button>
+                <button>BUY NOW</button>
+            </div>
+        
+    </div>
+</div>
+
 {% endblock %}

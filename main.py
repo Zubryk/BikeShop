@@ -18,9 +18,9 @@ class Bike(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     wheels = db.Column(db.Integer, nullable=False)
-    size = db.Column(db.Integer, nullable=False)
+    size = db.Column(db.CHAR, nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    isActive = db.Column(db.Boolean, default=True)
+    isActive = db.Column(db.Boolean, default=False)
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,7 +28,7 @@ class Item(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    isActive = db.Column(db.Boolean, default=True)
+    isActive = db.Column(db.Boolean, default=False)
 
 
 @app.route("/")
@@ -54,7 +54,8 @@ def bike_goods():
 @app.route("/admin", methods = ['GET', 'POST'])
 def admin():
     bikes = Bike.query.all()
-    return render_template("adminlst.html", bikes = bikes)
+    items = Item.query.all()
+    return render_template("adminlst.html", bikes = bikes, items = items)
 
 @app.route("/delete_bike/<int:id>", methods = ['GET', 'POST'])
 def delete_bike(id):
@@ -69,8 +70,9 @@ def edit_bike(id):
     if request.method == 'POST':
         file1 = request.files['inputFile']
         path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
-        file1.save(path)
-        bike.photo = file1.filename
+        if file1.filename != '':
+            file1.save(path)
+            bike.photo = file1.filename
         bike.title = request.form["title"]
         bike.description = request.form['description']
         bike.wheels = request.form['wheels']
@@ -81,8 +83,33 @@ def edit_bike(id):
     else:
         return render_template('edit_bike.html', bike = bike)
 
-@app.route("/admin_add", methods = ['GET', 'POST'])
-def admin_add():
+@app.route("/delete_item/<int:id>", methods = ['GET', 'POST'])
+def delete_item(id):
+    item = Item.query.get(id)
+    db.session.delete(item)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+@app.route("/edit_item/<int:id>", methods = ['GET', 'POST'])
+def edit_item(id):
+    item = Item.query.get(id)
+    if request.method == 'POST':
+        file1 = request.files['inputFile']
+        path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
+        if file1.filename != '':
+            file1.save(path)
+            item.photo = file1.filename
+        item.title = request.form["title"]
+        item.description = request.form['description']
+        item.price = request.form["price"]
+        db.session.commit()
+        return redirect(url_for('admin'))
+    else:
+        return render_template('edit_item.html', item = item)
+
+
+@app.route("/admin_add_bike", methods = ['GET', 'POST'])
+def admin_add_bike():
     if request.method == 'POST':
         file1 = request.files['inputFile']
         path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
@@ -103,6 +130,53 @@ def admin_add():
             return "Error"
     else:
         return render_template("admin.html")
+
+@app.route("/admin_add_item", methods = ['GET', 'POST'])
+def admin_add_item():
+    if request.method == 'POST':
+        file1 = request.files['inputFile']
+        path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
+        file1.save(path)
+        title = request.form["title"]
+        description = request.form['description']
+        price = request.form["price"]
+
+        item = Item(photo = file1.filename, title=title, description = description, price=price)
+
+        try:
+            db.session.add(item)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "Error"
+    else:
+        return render_template("add_item.html")
+
+@app.route("/bike_cart/<int:id>", methods = ['GET', 'POST'])
+def bike_cart(id):
+    bike = Bike.query.get(id)
+    if bike.isActive == False:
+        bike.isActive = True
+    else:
+        bike.isActive = False
+    db.session.commit()
+    return redirect(url_for('bikes'))
+
+@app.route("/item_cart/<int:id>", methods = ['GET', 'POST'])
+def item_cart(id):
+    item = Item.query.get(id)
+    if item.isActive == False:
+        item.isActive = True
+    else:
+        item.isActive = False
+    db.session.commit()
+    return redirect(url_for('bike_goods'))
+
+@app.route("/cart")
+def cart():
+    bikes = Bike.query.all()
+    items = Item.query.all()
+    return render_template("cart.html", bikes = bikes, items = items)
 
 if __name__ == "__main__":
     #db.create_all()

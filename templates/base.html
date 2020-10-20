@@ -6,8 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    {% block head %}
+    {% endblock %}
   <style>
-    .zoom:active{
+    .zoom:active {
       transform: scale(3);
       /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
     }
@@ -22,6 +24,7 @@
     <nav class="my-2 my-md-0 mr-md-3">
       <a class="p-2 text-dark" href="/bikes">Bikes</a>
       <a class="p-2 text-dark" href="/bike_goods">Bike Goods</a>
+      <a class="p-2 text-dark" href="/cart">Cart</a>
     </nav>
     <a class="btn btn-outline-primary" href="/admin">Admin Tools</a>
   </div>
@@ -44,7 +47,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
     integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
     crossorigin="anonymous"></script>
-  <script src="{{ url_for('static', filename = 'readmore.js') }}"></script>
+  <script src="{{ url_for('static', filename = 'app.js') }}"></script>
 </body>
 
 </html>
