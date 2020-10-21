@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os 
+from cloudipsp import Api, Checkout
 
 UPLOAD_FOLDER = './static'
 
@@ -30,6 +31,35 @@ class Item(db.Model):
     price = db.Column(db.Integer, nullable=False)
     isActive = db.Column(db.Boolean, default=False)
 
+@app.route('/bike_buy/<int:id>')
+def bike_buy(id):
+    bike = Bike.query.get(id)
+
+    api = Api(merchant_id=1396424,
+              secret_key='test')
+    checkout = Checkout(api=api)
+    data = {
+        "currency": "UAH",
+        "amount": str(bike.price)+"00"
+    }
+    url = checkout.url(data).get('checkout_url')
+
+    return redirect(url)
+
+@app.route('/item_buy/<int:id>')
+def item_buy(id):
+    item = Item.query.get(id)
+
+    api = Api(merchant_id=1396424,
+              secret_key='test')
+    checkout = Checkout(api=api)
+    data = {
+        "currency": "UAH",
+        "amount": str(item.price)+"00"
+    }
+    url = checkout.url(data).get('checkout_url')
+
+    return redirect(url)
 
 @app.route("/")
 def home():
