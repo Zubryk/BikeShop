@@ -21,6 +21,7 @@ class Bike(db.Model):
     wheels = db.Column(db.Integer, nullable=False)
     size = db.Column(db.CHAR, nullable=False)
     price = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
     isActive = db.Column(db.Boolean, default=False)
 
 class Item(db.Model):
@@ -29,12 +30,13 @@ class Item(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
     isActive = db.Column(db.Boolean, default=False)
 
 @app.route('/bike_buy/<int:id>')
 def bike_buy(id):
     bike = Bike.query.get(id)
-
+    
     api = Api(merchant_id=1396424,
               secret_key='test')
     checkout = Checkout(api=api)
@@ -43,13 +45,17 @@ def bike_buy(id):
         "amount": str(bike.price)+"00"
     }
     url = checkout.url(data).get('checkout_url')
-
-    return redirect(url)
+    if bike.amount > 0:
+        bike.amount -= 1
+        db.session.commit()
+        return redirect(url)
+    else:
+        return "This bike is not available now (:"
 
 @app.route('/item_buy/<int:id>')
 def item_buy(id):
     item = Item.query.get(id)
-
+    item.amount -= 1
     api = Api(merchant_id=1396424,
               secret_key='test')
     checkout = Checkout(api=api)
@@ -59,7 +65,10 @@ def item_buy(id):
     }
     url = checkout.url(data).get('checkout_url')
 
-    return redirect(url)
+    if item.amount > 0:
+        return redirect(url)
+    else:
+        return "This item is not available now (:"
 
 @app.route("/")
 def home():
@@ -108,6 +117,7 @@ def edit_bike(id):
         bike.wheels = request.form['wheels']
         bike.size = request.form['size']
         bike.price = request.form["price"]
+        bike.amount = request.form["amount"]
         db.session.commit()
         return redirect(url_for('admin'))
     else:
@@ -132,6 +142,7 @@ def edit_item(id):
         item.title = request.form["title"]
         item.description = request.form['description']
         item.price = request.form["price"]
+        item.amount = request.form["amount"]
         db.session.commit()
         return redirect(url_for('admin'))
     else:
@@ -149,8 +160,9 @@ def admin_add_bike():
         wheels = request.form['wheels']
         size = request.form['size']
         price = request.form["price"]
+        amount = request.form["amount"]
 
-        bike = Bike(photo = file1.filename, title=title,description = description, wheels = wheels, size = size, price=price)
+        bike = Bike(photo = file1.filename, title=title,description = description, wheels = wheels, size = size, price=price, amount = amount)
 
         try:
             db.session.add(bike)
@@ -170,8 +182,9 @@ def admin_add_item():
         title = request.form["title"]
         description = request.form['description']
         price = request.form["price"]
+        amount = request.form["amount"]
 
-        item = Item(photo = file1.filename, title=title, description = description, price=price)
+        item = Item(photo = file1.filename, title=title, description = description, price=price, amount = amount)
 
         try:
             db.session.add(item)

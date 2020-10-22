@@ -70,7 +70,7 @@ margin-bottom: 25px;
 
 h3:nth-child(2) {
     color: gray;
-    text-decoration: line-through; 
+    /*text-decoration: line-through; */
 }
 
 .choose {

@@ -18,8 +18,7 @@
                             <p class="card-text" style="margin: 0px;">{{ item.description[:150] }}<span id="dots">...</span><span
                                    class = 'more' id="more{{item.id}}" style="display: none;">{{ item.description[150:] }}</span></p>
                                     <div style="text-align: right;">
-                            <button class="btn-sm" style="color: #000; border: none; background:none;" href = "/./{{item.id}}" 
-                                id="myBtn{{item.id}}">Read more</button>
+                                        <p>{% if item.amount != 0 %}<div style="color: green;">Available</div>{% else %}<div style="color: red;">Not Available</div>{% endif %}</p>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">

@@ -18,6 +18,7 @@
         <div class="infos">
             <div class="price">
                 <h3>Price: {{bike.price}}₴</h3>
+                <h3>{% if bike.amount != 0 %}<div style="color: green;">Available</div>{% else %}<div style="color: red;">Not Available</div>{% endif %}</h3>
             </div>
             <div id="more-infos">
                 <h5 class="choose">Description</h5>
